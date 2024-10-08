@@ -2,12 +2,14 @@
 using BracketGenerator.TournamentFactory;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BracketGenerator.Services
 {
+    [ExcludeFromCodeCoverage]
     public class Application : IApplication
     {
         private readonly IGroupMatchService _groupMatchService;
@@ -44,7 +46,7 @@ namespace BracketGenerator.Services
 
         private TournamentFactory.TournamentFactory CreateTournamentFactory()
         {
-            return new ConcreteTournamentFactory(_groupMatchService, _tournamentService, _eliminationMatchService);
+            return new ConcreteTournamentFactory(_groupMatchService, _eliminationMatchService);
         }
 
         private void ProcessInput(int option)
@@ -59,7 +61,7 @@ namespace BracketGenerator.Services
                     break;
                 case 2:
                     matchTypeFactory = CreateTournamentFactory().GetMatchTypeFactory("Elimination");
-                    numberOfTeams = 128;
+                    numberOfTeams = 64;
                     break;
                 case 3:
                     matchTypeFactory = CreateTournamentFactory().GetMatchTypeFactory("Group");
@@ -84,9 +86,9 @@ namespace BracketGenerator.Services
         private static void DisplayOptions()
         {
             Console.WriteLine("\nSelect an option:");
-            Console.WriteLine("1. Simulate World Cup Tournament");
-            Console.WriteLine("2. Simulate NCAA Soccer Tournament");
-            Console.WriteLine("3. Simulate Group Stage");
+            Console.WriteLine("1. Soccer World Cup Tournament");
+            Console.WriteLine("2. NCAA Soccer Tournament");
+            Console.WriteLine("3. Soccer World Cup Tournament With Group Stage");
             Console.WriteLine("4. Exit \n");
             Console.WriteLine("Please enter your selection...");
         }

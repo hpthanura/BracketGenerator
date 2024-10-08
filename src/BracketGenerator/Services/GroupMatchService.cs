@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace BracketGenerator.Services
 {
-    internal class GroupMatchService : IGroupMatchService
+    public class GroupMatchService : IGroupMatchService
     {
-        private ITeamService _teamService;
-        private ITournamentService _tournamnetService;
-        private ILogService _logService; 
+        private readonly ITeamService _teamService;
+        private readonly ITournamentService _tournamnetService;
+        private readonly ILogService _logService;
         List<Match> allMatches = new List<Match>();
         private List<Tuple<string, List<Team>>> groupTeams = new List<Tuple<string, List<Team>>>();
         private List<Tuple<string, List<Match>>> groupMatches = new List<Tuple<string, List<Match>>>();
@@ -31,7 +31,7 @@ namespace BracketGenerator.Services
             allMatches.Clear();
             List<Team> teams = _teamService.SeedTeams(noOfTeams, groupSize);
             int groupNumber = 1;
-            for (int i = 0; i < teams.Count; i+=groupSize)
+            for (int i = 0; i < teams.Count; i += groupSize)
             {
                 string groupName = "Group " + groupNumber;
                 groupTeams.Add(new Tuple<string, List<Team>>(groupName, teams.GetRange(i, groupSize)));
@@ -46,24 +46,22 @@ namespace BracketGenerator.Services
         private void StartGruopMatches(string groupName, List<Team> teams)
         {
             int matchNumber = 1;
-            List<Match> matches = new List<Match>();    
+            List<Match> matches = new List<Match>();
             foreach (Team team in teams)
             {
                 foreach (Team oponent in teams)
                 {
-                    if (team != oponent)
+                    if (team != oponent && (!(allMatches.Exists(match => match.FirstTeam == team && match.SecondTeam == oponent) ||
+                            allMatches.Exists(match => match.FirstTeam == oponent && match.SecondTeam == team))))
                     {
-                        if (!(allMatches.Any(match => match.FirstTeam == team && match.SecondTeam == oponent) ||
-                            allMatches.Any(match => match.FirstTeam == oponent && match.SecondTeam == team)))
-                        {
-                            string matchName = groupName + " Match " + matchNumber.ToString();
-                            Match groupMatch = new Match(matchName, team, oponent);
-                            groupMatch.StartMatch();
-                            matches.Add(groupMatch);
-                            allMatches.Add(groupMatch);
-                            matchNumber++;
-                        } 
+                        string matchName = groupName + " Match " + matchNumber.ToString();
+                        Match groupMatch = new Match(matchName, team, oponent);
+                        groupMatch.StartMatch();
+                        matches.Add(groupMatch);
+                        allMatches.Add(groupMatch);
+                        matchNumber++;
                     }
+
                 }
             }
             groupMatches.Add(new Tuple<string, List<Match>>(groupName, matches));

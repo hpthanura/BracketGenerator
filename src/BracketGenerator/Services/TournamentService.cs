@@ -22,6 +22,15 @@ namespace BracketGenerator.Services
 
         public void StartTournament(int noOfTeams, int groupSize)
         {
+            if (noOfTeams < 0 || groupSize < 1)
+            {
+                throw new ArgumentException("Number of teams and the group size should be greater than zero");
+            }
+            else if (groupSize > noOfTeams)
+            {
+                throw new ArgumentException("Group size should be less than number of teams");
+            }
+
             Teams.Clear();
             Rounds.Clear();
             Teams = _teamService.SeedTeams(noOfTeams, groupSize);
@@ -78,7 +87,8 @@ namespace BracketGenerator.Services
                 matches.Add(match);
             }
 
-            foreach (var losers in teamsLost) { 
+            foreach (var losers in teamsLost)
+            {
                 Teams.Remove(losers);
             }
             return matches;
@@ -94,7 +104,7 @@ namespace BracketGenerator.Services
             List<Match> teamMatches = new List<Match>();
             foreach (var round in Rounds)
             {
-                Match? winningMatch = round.Matches.FirstOrDefault(match => match.Winner == team);
+                Match? winningMatch = round.Matches.Find(match => match.Winner == team);
                 if (winningMatch != null)
                 {
                     teamMatches.Add(winningMatch);

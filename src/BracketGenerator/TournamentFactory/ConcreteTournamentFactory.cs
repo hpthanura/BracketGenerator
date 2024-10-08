@@ -11,12 +11,10 @@ namespace BracketGenerator.TournamentFactory
     {
         private readonly IGroupMatchService _groupMatchService;
         private readonly IEliminationMatchService _eliminationMatchService;
-        private readonly ITournamentService _tournamentService;
 
-        public ConcreteTournamentFactory(IGroupMatchService groupMatchService, ITournamentService tournamentService, IEliminationMatchService eliminationMatchService)
+        public ConcreteTournamentFactory(IGroupMatchService groupMatchService, IEliminationMatchService eliminationMatchService)
         {
             _groupMatchService = groupMatchService;
-            _tournamentService = tournamentService;
             _eliminationMatchService = eliminationMatchService;
         }
 

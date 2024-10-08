@@ -10,12 +10,10 @@ namespace BracketGenerator.Services
 {
     public class EliminationMatchService : IEliminationMatchService
     {
-        private readonly ITeamService _teamService;
         private readonly ITournamentService _tournamentService;
 
-        public EliminationMatchService(ITeamService teamService, ITournamentService tournamentService)
+        public EliminationMatchService(ITournamentService tournamentService)
         {
-            _teamService = teamService;
             _tournamentService = tournamentService;
         }
 
